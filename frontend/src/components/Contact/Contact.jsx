@@ -18,7 +18,7 @@ const Contact = () => {
   return (
     <Container h={'92vh'} mt={20}>
       <VStack h={'full'} justifyContent={'center'}>
-        <Heading children="Conatct Us" />
+        <Heading children="Contact Us" />
         <form style={{ width: '100%' }}>
           <Box my={4}>
             <FormLabel htmlFor="name" children="Enter Your Name" />

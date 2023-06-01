@@ -24,6 +24,7 @@ export const fileUploadCss = {
 const  fileUploadStyle = {
   '&::file-selector-button': fileUploadCss,
 };
+
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

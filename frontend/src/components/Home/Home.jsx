@@ -28,13 +28,14 @@ const Home = () => {
           alignItems={'center'}
           spacing={['16', '56']}
         >
-          <VStack width={'full'} alignItems={'center'} spacing={8}>
+          <VStack width={'full'} alignItems={['center','flex-end']} spacing={8}>
             <Heading
               children="Learn From The Experts"
-              size={'2xl'}
+              size={'xl'}
               textAlign={'center'}
             />
             <Text
+            fontFamily={'cursive'} 
               textAlign={['center', 'left']}
               children="Find Valuable Content At Reasonable Price"
             />
@@ -45,8 +46,8 @@ const Home = () => {
             </Link>
           </VStack>
           <Image
-            src={vg}
-            boxSize={'20rem'}
+            src={vg} 
+            boxSize={'md'}
             objectFit={'contain'}
             className="vector-graphics"
           />
@@ -76,7 +77,8 @@ const Home = () => {
           autoPlay={true}
           controls
           src={introVideo}
-          controlsList="nodownload nofullscreen "
+          controlsList="nodownload nofullscreen noremoteplayback "
+          disableRemotePlayback
           disablePictureInPicture
         ></video>
       </div>

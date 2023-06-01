@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
-  const params = useParams();
+  const params = useParams(); 
 
   return (
     <Container h={'90vh'}>

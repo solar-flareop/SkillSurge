@@ -12,6 +12,8 @@ import {
 import { Link } from 'react-router-dom';
 import introVideo from '../../assets/videos/intro.mp4';
 import { RiSecurePaymentFill } from 'react-icons/ri';
+import termsAndConditions from '../../assets/docs/termsAndCondition.js'
+
 const Founder = () => {
   return (
     <Stack direction={['column', 'row']} spacing={[4, 16]} padding={8}>
@@ -60,7 +62,7 @@ const TandC = ({ termsAndConditions }) => (
       my={4}
       textAlign={['center', 'left']}
     />
-    <Box p={4} h={'sm'}>
+    <Box p={4} h={'sm'} overflowY={'scroll'}>
       <Text
         textAlign={['center', 'left']}
         fontFamily={'heading'}
@@ -76,6 +78,7 @@ const TandC = ({ termsAndConditions }) => (
     </Box>
   </Box>
 );
+
 const About = () => {
   return (
     <Container maxW={'container.lg'} padding={16} boxShadow={'lg'}>
@@ -97,7 +100,7 @@ const About = () => {
 
       <VideoPlayer />
 
-      <TandC termsAndConditions="termsAndConditions" />
+      <TandC termsAndConditions={termsAndConditions} />
 
       <HStack p={4} my={4}>
         <RiSecurePaymentFill />

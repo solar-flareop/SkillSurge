@@ -10,6 +10,10 @@ import ResetPassword from './components/Auth/ResetPassword';
 import Contact from './components/Contact/Contact';
 import Request from './components/Request/Request';
 import About from './components/About/About';
+import Subscribe from './components/Payments/Subscribe';
+import PaymentSuccess from './components/Payments/PaymentSuccess';
+import PaymentFail from './components/Payments/PaymentFail';
+import Notfound from './components/Layout/NotFound/Notfound';
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/request" element={<Request />} />
         <Route path="/about" element={<About />} />
+        <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+        <Route path="/paymentfail" element={<PaymentFail />} />
+        <Route path="*" element={<Notfound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

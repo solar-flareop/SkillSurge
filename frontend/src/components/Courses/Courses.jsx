@@ -191,78 +191,8 @@ const Courses = () => {
           }
           addToPlaylistHandler={addToPlaylistHandler}
         />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
+        
+        
       </Stack>
     </Container>
   );
@@ -300,7 +230,7 @@ const Course = ({
         <Text
           children={creator}
           textTransform={'uppercase'}
-          fontFamily={'bold'}
+          fontFamily={'body'}
         />
       </HStack>
       <Heading

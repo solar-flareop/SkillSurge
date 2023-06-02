@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const isAuthenticated = false;
+  const isAuthenticated = true;
   const user = {
     role: 'admin',
   };
@@ -32,6 +32,7 @@ const Header = () => {
         colorScheme="yellow"
         h={'12'}
         w={'12'}
+        zIndex={'overlay'}
         rounded={'full'}
         position={'fixed'}
         top={6}

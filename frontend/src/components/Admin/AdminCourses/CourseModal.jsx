@@ -26,7 +26,7 @@ const CourseModal = ({
   courseTitle,
   addLectureHandler,
   deleteButtonHandler,
-  lectures = [],
+  lectures = [1,2,3,4,5,6,7,8,9],
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -42,28 +42,43 @@ const CourseModal = ({
       setVideo(file);
     };
   };
+
+  const onCloseHandler = () => {
+    onClose();
+    setVideo('');
+    setVideoPrev('');
+  };
+
   return (
-    <Modal isOpen={isOpen} size={'full'} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      size={'full'}
+      onClose={onCloseHandler}
+      scrollBehavior="outside"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{courseTitle}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody p={16}>
+        <ModalBody p={[16,8]}>
           <Grid templateColumns={['1fr', '3fr 1fr']}>
-            <Box px={[0, 16]}>
+            <Box px={[0, 6]}>
               <Box my={5}>
                 <Heading children={courseTitle} />
                 <Heading children={`#${id}`} size={'sm'} opacity={0.4} />
               </Box>
               <Heading children="Lectures" size={'lg'} />
-              <VideoCard
-                title="React into"
-                num={1}
-                description="wdbcdbljcnldjn"
-                lectureId="lec123"
-                courseId={id}
-                deleteButtonHandler={deleteButtonHandler}
-              />
+              {lectures.map((item, idx) => (
+                <VideoCard
+                key={idx}
+                  title="React into"
+                  num={idx+1}
+                  description="this is description of react course"
+                  lectureId="lec123"
+                  courseId={id}
+                  deleteButtonHandler={deleteButtonHandler}
+                />
+              ))}
             </Box>
             <Box>
               <form
@@ -71,7 +86,7 @@ const CourseModal = ({
                   addLectureHandler(e, id, title, video, description)
                 }
               >
-                <VStack spacing={4}>
+                <VStack spacing={8}>
                   <Heading
                     children="Add lectures"
                     size={'md'}
@@ -118,9 +133,7 @@ const CourseModal = ({
           </Grid>
         </ModalBody>
         <ModalFooter>
-            <Button onClick={onClose}>
-                Close
-            </Button>
+          <Button onClick={onCloseHandler}>Close</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

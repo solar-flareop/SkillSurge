@@ -50,6 +50,7 @@ const AdminCourses = () => {
   const addLectureHandler = (e, courseId, title, description, video) => {
     e.preventDefault();
   };
+  
   return (
     <Grid
       minH={'90vh'}

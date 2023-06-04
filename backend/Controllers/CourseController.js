@@ -24,7 +24,7 @@ export const createCourse = catchAsyncError(async (req, res, next) => {
     createdBy,
     poster: { public_id: "temp", url: "temp" },
   });
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     message: "Course created successfully. You can add lectures now!",
   });

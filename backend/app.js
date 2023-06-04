@@ -1,5 +1,6 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser'
 dotenv.config({
   path: "./Config/.env",
 });
@@ -14,6 +15,8 @@ import ErrorMiddleware from "./Middlewares/Error.js";
 
 //middlewares
 app.use(express.json());
+app.use(urlencoded({ extended: true }));
+app.use(cookieParser())
 
 //routes
 app.use("/api/v1/", courseRouter);

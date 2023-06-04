@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 const schema = new mongoose.Schema({
   name: {
@@ -18,7 +19,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, "Enter you password"],
     minLength: [5, "Password must have min 5 characters"],
-    select: false,
+    select: false, //we will not get password while fetching
   },
   role: {
     type: String,
@@ -53,8 +54,8 @@ const schema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  ResetPasswordToken: String,
-  ResetPasswordExpire: String,
+  resetPasswordToken: String,
+  resetPasswordExpire: String,
 });
 //my changes
 schema.pre("save", async function (next) {
@@ -72,6 +73,16 @@ schema.methods.getJWTToken = function () {
   return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
     expiresIn: "15d",
   });
+};
+
+schema.methods.getResetToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; //15mins
+  return resetToken;
 };
 
 export default new mongoose.model("User", schema);

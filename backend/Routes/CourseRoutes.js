@@ -1,18 +1,36 @@
 import express from "express";
 import {
-  createCourse,
-  getAllCourses,
+  createCourseController,
+  getAllCoursesController,
+  getCourseLecturesController,
+  addLectureController,
+  deleteCourseController,
+  deleteLectureController,
 } from "../Controllers/CourseController.js";
+import singleUpload from "../Middlewares/Multer.js";
+import { isAdmin, isAuthenticated } from "../Middlewares/Auth.js";
 const router = express.Router();
 
 //get all courses without lectures
-router.route("/courses").get(getAllCourses);
+router.route("/courses").get(getAllCoursesController);
 
-//create new course - admin only
-router.route("/createcourse").post(createCourse);
+//create new course
+router
+  .route("/createcourse")
+  .post(isAuthenticated, isAdmin, singleUpload, createCourseController);
 
-//add lecture, delete course , get course details
+//get all lectures of course
+//add lecture to course
+//delete course
+router
+  .route("/course/:id")
+  .get(isAuthenticated, getCourseLecturesController)
+  .post(isAuthenticated, isAdmin, singleUpload, addLectureController)
+  .delete(isAuthenticated, isAdmin, deleteCourseController);
 
-//delete lectures
+//delete lecture
+router
+  .route("/lecture")
+  .delete(isAuthenticated, isAdmin, deleteLectureController);
 
 export default router;

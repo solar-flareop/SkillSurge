@@ -5,41 +5,67 @@ import {
   registerController,
   getMyProfileController,
   changePasswordController,
-  updateProfileController,updateProfilePictureController,forgetPasswordController,resetPasswordController
+  updateProfileController,
+  updateProfilePictureController,
+  forgetPasswordController,
+  resetPasswordController,
+  addToPlaylistController,
+  removeFromPlaylistController,
+  getAllUsersController,
+  updateUserRoleController,
 } from "../Controllers/UserController.js";
-import { isAuthenticated } from "../Middlewares/Auth.js";
+import { isAdmin, isAuthenticated } from "../Middlewares/Auth.js";
+import singleUpload from "../Middlewares/Multer.js";
 
 const router = express.Router();
 
 //register new user
-router.route("/register").post(registerController);
+router.route("/register").post(singleUpload, registerController);
 
 //login
 router.route("/login").post(loginController);
 
 //logout
-router.route("/logout").get(logoutController);
+router.route("/logout").get(isAuthenticated, logoutController);
 
 //get my profile
-router.route("/me").get(isAuthenticated,getMyProfileController);
+router.route("/me").get(isAuthenticated, getMyProfileController);
 
 //change password
-router.route("/changepassword").put(isAuthenticated,changePasswordController);
+router.route("/changepassword").put(isAuthenticated, changePasswordController);
 
 //update profile
-router.route("/updateprofile").put(isAuthenticated,updateProfileController);
+router.route("/updateprofile").put(isAuthenticated, updateProfileController);
 
 //update profile picture
-//not done
-router.route("/updateprofilepicture").put(isAuthenticated,updateProfilePictureController);
+router
+  .route("/updateprofilepicture")
+  .put(isAuthenticated, singleUpload, updateProfilePictureController);
 
 //forget paassword
 router.route("/forgetpassword").post(forgetPasswordController);
 
 //reset password
 router.route("/resetpassword/:token").put(resetPasswordController);
+
 //add to playlist
+router.route("/addtoplaylist").post(isAuthenticated, addToPlaylistController);
 
 //remove from playlist
+router
+  .route("/removefromplaylist")
+  .delete(isAuthenticated, removeFromPlaylistController);
+
+// --------------------------ADMIN ROUTES----------------------------------
+
+//get all users
+router
+  .route("/admin/users")
+  .get(isAuthenticated, isAdmin, getAllUsersController);
+
+//update user role
+router
+  .route("/admin/user/:id")
+  .put(isAuthenticated, isAdmin, updateUserRoleController);
 
 export default router;

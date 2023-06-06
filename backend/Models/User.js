@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
     default: "user",
   },
   subscription: {
-    is: String,
+    id: String,
     status: String,
   },
   avatar: {
@@ -57,7 +57,7 @@ const schema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpire: String,
 });
-//my changes
+
 schema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);

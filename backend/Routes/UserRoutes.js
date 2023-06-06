@@ -4,6 +4,7 @@ import {
   logoutController,
   registerController,
   getMyProfileController,
+  deleteMyProfileController,
   changePasswordController,
   updateProfileController,
   updateProfilePictureController,
@@ -13,6 +14,7 @@ import {
   removeFromPlaylistController,
   getAllUsersController,
   updateUserRoleController,
+  deleteUserController,
 } from "../Controllers/UserController.js";
 import { isAdmin, isAuthenticated } from "../Middlewares/Auth.js";
 import singleUpload from "../Middlewares/Multer.js";
@@ -29,7 +31,11 @@ router.route("/login").post(loginController);
 router.route("/logout").get(isAuthenticated, logoutController);
 
 //get my profile
-router.route("/me").get(isAuthenticated, getMyProfileController);
+//delete my profile
+router
+  .route("/me")
+  .get(isAuthenticated, getMyProfileController)
+  .delete(isAuthenticated, deleteMyProfileController);
 
 //change password
 router.route("/changepassword").put(isAuthenticated, changePasswordController);
@@ -64,8 +70,10 @@ router
   .get(isAuthenticated, isAdmin, getAllUsersController);
 
 //update user role
+//delete user
 router
   .route("/admin/user/:id")
-  .put(isAuthenticated, isAdmin, updateUserRoleController);
+  .put(isAuthenticated, isAdmin, updateUserRoleController)
+  .delete(isAuthenticated, isAdmin, deleteUserController);
 
 export default router;

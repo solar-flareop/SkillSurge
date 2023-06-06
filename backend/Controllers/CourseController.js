@@ -1,4 +1,5 @@
 import courseModel from "../Models/Course.js";
+import statModel from "../Models/Stats.js";
 import catchAsyncError from "../Middlewares/CatchAsyncError.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import getDataUri from "../Utils/DataUri.js";
@@ -6,7 +7,20 @@ import cloudinary from "cloudinary";
 
 export const getAllCoursesController = catchAsyncError(
   async (req, res, next) => {
-    const courses = await courseModel.find().select("-lectures");
+    const keyword = req.query.keyword || "";
+    const category = req.query.category || "";
+    const courses = await courseModel
+      .find({
+        title: {
+          $regex: keyword,
+          $options: "i",
+        },
+        category: {
+          $regex: category,
+          $options: "i",
+        },
+      })
+      .select("-lectures");
     res.status(200).json({
       success: true,
       courses,
@@ -151,3 +165,19 @@ export const deleteLectureController = catchAsyncError(
     });
   }
 );
+
+courseModel.watch().on("change", async () => {
+  const stats = await statModel.find({}).sort({ createdAt: "desc" }).limit(1);
+
+  const courses = await courseModel.find({});
+
+  let totalViews = 0;
+  for (let i = 0; i < courses.length; i++) {
+    totalViews += courses[i].views;
+  }
+
+  stats[0].views = totalViews;
+  stats[0].createdAt = new Date(Date.now());
+
+  await stats[0].save();
+});

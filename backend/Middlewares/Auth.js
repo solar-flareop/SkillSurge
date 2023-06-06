@@ -21,3 +21,11 @@ export const isAdmin = (req, res, next) => {
     );
   next();
 };
+
+export const isUserSubscribed = (req, res, next) => {
+  if (req.user.subscription.status !== "active" && req.user.role !== "admin")
+    return next(
+      new ErrorHandler(`Only subscribers can access this resource`, 403)
+    );
+  next();
+};

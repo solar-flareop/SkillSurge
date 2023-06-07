@@ -54,12 +54,10 @@ export const loginController = catchAsyncError(async (req, res, next) => {
 export const logoutController = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
-    .cookie("token", null, {
-      expires: new Date(Date.now()),
-      // expires: new Date(Date.now() + 15 * 24 * 60 * 50 * 1000),
-      // httpOnly: true,
-      // secure: true,
-      // sameSite: "none",
+    .clearCookie("token", {
+      httpOnly: true,
+      secure: true, //not in lh
+      sameSite: "none",
     })
     .json({
       success: true,
@@ -90,12 +88,10 @@ export const deleteMyProfileController = catchAsyncError(
 
     res
       .status(200)
-      .cookie("token", null, {
-        expires: new Date(Date.now()),
-        // expires: new Date(Date.now() + 15 * 24 * 60 * 50 * 1000),
-        // httpOnly: true,
-        // secure: true,
-        // sameSite: "none",
+      .clearCookie("token", {
+        httpOnly: true,
+        secure: true, //not in lh
+        sameSite: "none",
       })
       .json({
         success: true,

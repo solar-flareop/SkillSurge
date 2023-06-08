@@ -6,8 +6,46 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import axios from 'axios';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { server } from '../../redux/store';
+import { buySubscription } from '../../redux/actions/user';
+import { useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 
 const Subscribe = () => {
+  const dispatch = useDispatch();
+  const [key, setKey] = useState('');
+
+  const { loading, error, subscriptionId } = useSelector(
+    state => state.subscription
+  );
+
+  const subscribeHandler = async () => {
+    const {
+      data: { key },
+    } = await axios.get(`${server}/razorpaykey`);
+    setKey(key);
+    dispatch(buySubscription());
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (subscriptionId) {
+      const openPopUp = () => {
+        const options = { key };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+      };
+      openPopUp();
+    }
+  }, []);
+
   return (
     <Container h={'100vh'} p={8}>
       <Heading my={8} textAlign={'center'} children="Welcome" />
@@ -25,7 +63,12 @@ const Subscribe = () => {
             <Text children="Join Pro Pack and get access to all content." />
             <Heading size={'md'} children="₹299 Only" />
           </VStack>
-          <Button colorScheme="yellow" w={'full'} my={4}>
+          <Button
+            colorScheme="yellow"
+            w={'full'}
+            my={4}
+            onClick={subscribeHandler}
+          >
             {' '}
             Buy Now
           </Button>

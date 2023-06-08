@@ -9,12 +9,18 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getAllCourses } from '../../redux/actions/course';
+import { addToPlaylist } from '../../redux/actions/profile';
+import { loadUser } from '../../redux/actions/user';
 
 const Courses = () => {
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('');
+
   const categories = [
     'Web Development',
     'Artificial Intellegence',
@@ -24,9 +30,30 @@ const Courses = () => {
     'Data Science',
     'Full-Stack Development',
   ];
-  const addToPlaylistHandler = id => {
-    console.log(id);
+
+  const dispatch = useDispatch();
+
+  const { loading, courses, error, message } = useSelector(
+    state => state.course
+  );
+
+  useEffect(() => {
+    dispatch(getAllCourses(category, keyword));
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [keyword, category, dispatch, error, message]);
+
+  const addToPlaylistHandler = async courseId => {
+    await dispatch(addToPlaylist(courseId));
+    dispatch(loadUser());
   };
+
   return (
     <Container minH={'95vh'} paddingY={8} maxW={'container.lg'}>
       <Heading children="All Courses" m={8} />
@@ -59,140 +86,25 @@ const Courses = () => {
         justifyContent={['flex-start', 'space-evenly']}
         alignItems={['center', 'flex-start']}
       >
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        <Course
-          views={8}
-          title={'fghj'}
-          id={1}
-          creator={'hsjan'}
-          description={'sdhsbkhdbks'}
-          lectureCount={4849}
-          imageSrc={
-            'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80'
-          }
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
-        
-        
+        {courses.length > 0 ? (
+          courses &&
+          courses.map(item => (
+            <Course
+              key={item._id}
+              views={item.views}
+              title={item.title}
+              id={item._id}
+              creator={item.createdBy}
+              description={item.description}
+              lectureCount={item.numOfVideos}
+              imageSrc={item.poster.url}
+              addToPlaylistHandler={addToPlaylistHandler}
+              loading={loading}
+            />
+          ))
+        ) : (
+          <Heading children="Courses not found!" mt={4} opacity={0.7} />
+        )}
       </Stack>
     </Container>
   );
@@ -209,6 +121,7 @@ const Course = ({
   description,
   lectureCount,
   imageSrc,
+  loading,
 }) => {
   return (
     <VStack className="course" alignItems={['center', 'flex-start']}>
@@ -219,18 +132,21 @@ const Course = ({
         noOfLines={3}
         size={'sm'}
         children={title}
+        color={'black'}
       />
-      <Text noOfLines={2} children={description} />
+      <Text noOfLines={2} children={description} color={'black'} />
       <HStack>
         <Text
           children={'Creator'}
           textTransform={'uppercase'}
           fontWeight={'bold'}
+          color={'black'}
         />
         <Text
           children={creator}
           textTransform={'uppercase'}
           fontFamily={'body'}
+          color={'black'}
         />
       </HStack>
       <Heading
@@ -238,20 +154,23 @@ const Course = ({
         size={'xs'}
         children={`Lecture - ${lectureCount}`}
         textTransform={'uppercase'}
+        color={'black'}
       />
       <Heading
         size={'xs'}
         children={`Views - ${views}`}
         textTransform={'uppercase'}
+        color={'black'}
       />
       <Stack direction={['column', 'row']} alignItems={'center'}>
         <Link to={`/course/${id}`}>
           <Button colorScheme="yellow">Watch Now</Button>
         </Link>
         <Button
-          colorScheme="yellow"
-          variant={'ghost'}
+          colorScheme="telegram"
+          variant={'outline'}
           onClick={() => addToPlaylistHandler(id)}
+          isLoading={loading}
         >
           Add to playlist
         </Button>

@@ -8,17 +8,26 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { login } from '../../redux/actions/user';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const dispatch = useDispatch();
+
+  const submitHandler = e => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
+
   return (
     <Container minH={'95vh'} mt={20}>
       <VStack h={'full'} justifyContent={'center'} spacing={16}>
         <Heading children={'Welcome to Online Adda'} />
-        <form style={{ width: '100%'}}>
+        <form style={{ width: '100%' }} onSubmit={submitHandler}>
           <Box my={4}>
             <FormLabel htmlFor="email" children="Email Address" />
             <Input

@@ -13,14 +13,15 @@ import {
 } from '@chakra-ui/react';
 import { RiMenu5Fill, RiLogoutBoxLine, RiDashboardFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/actions/user';
 
-const Header = () => {
+const Header = ({user,isAuthenticated=false}) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const isAuthenticated = true;
-  const user = {
-    role: 'admin',
-  };
+
+  const dispatch =useDispatch()
   const logoutHandler = () => {
+    dispatch(logout())
     onClose();
   };
 

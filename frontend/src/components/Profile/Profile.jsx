@@ -18,36 +18,48 @@ import {
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import vg from '../../assets/images/landinglogo.jpg';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import { fileUploadCss } from '../Auth/Register';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  removeFromPlaylist,
+  updateProfilePicture,
+} from '../../redux/actions/profile';
+import { loadUser } from '../../redux/actions/user';
+import { toast } from 'react-hot-toast';
 
-const Profile = () => {
-  const user = {
-    name: 'Suraj',
-    email: 'SUraj@mail.com',
-    createdAt: String(new Date().toISOString()),
-    role: 'user',
-    subscription: {
-      status: 'active',
-    },
-    playlist: [
-      {
-        course: 'qsd',
-        poster: vg,
-      },
-    ],
-  };
-
+const Profile = ({ user }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const removeFromPlaylistHandler = id => {};
+  const dispatch = useDispatch();
 
-  const changeImageSubmitHandler=(e,image)=>{
-e.preventDefault()
-  }
+  const { loading, message, error } = useSelector(state => state.profile);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [error, message, dispatch]);
+
+  const removeFromPlaylistHandler = async id => {
+    await dispatch(removeFromPlaylist(id));
+    dispatch(loadUser());
+  };
+
+  const changeImageSubmitHandler = async (e, image) => {
+    e.preventDefault();
+    const myForm = new FormData();
+    myForm.append('file', image); //in multer name is file
+    await dispatch(updateProfilePicture(myForm));
+    dispatch(loadUser());
+  };
 
   return (
     <Container minH={'95vh'} maxW={'container.lg'} py={6}>
@@ -61,7 +73,7 @@ e.preventDefault()
         direction={['column', 'row']}
       >
         <VStack>
-          <Avatar boxSize={20} />
+          <Avatar boxSize={20} src={user.avatar.url} />
           <Button
             colorScheme="yellow"
             variant={'ghost'}
@@ -85,7 +97,7 @@ e.preventDefault()
           {user.role !== 'admin' && (
             <HStack>
               <Text children="Subscription" fontWeight={'bold'} />
-              {user.subscription.status === 'active' ? (
+              {user.subscription && user.subscription.status === 'active' ? (
                 <Button color="yellow.500">Cancel Subscription</Button>
               ) : (
                 <Link to="/subscribe">
@@ -127,6 +139,7 @@ e.preventDefault()
                 </Link>
                 <Button
                   onClick={() => removeFromPlaylistHandler(element.course)}
+                  isLoading={loading}
                 >
                   <RiDeleteBin7Fill />
                 </Button>
@@ -136,19 +149,26 @@ e.preventDefault()
         </Stack>
       )}
 
-      <ChangePhotoBox isOpen={isOpen} onClose={onClose} changeImageSubmitHandler={changeImageSubmitHandler} />
+      <ChangePhotoBox
+        isOpen={isOpen}
+        onClose={onClose}
+        loading={loading}
+        changeImageSubmitHandler={changeImageSubmitHandler}
+      />
     </Container>
   );
 };
 
 export default Profile;
 
-
-
-
-const ChangePhotoBox = ({ isOpen, onClose, changeImageSubmitHandler }) => {
-    const [imagePrev, setImagePrev] = useState('');
-    const [image, setImage] = useState('');
+const ChangePhotoBox = ({
+  isOpen,
+  onClose,
+  changeImageSubmitHandler,
+  loading,
+}) => {
+  const [imagePrev, setImagePrev] = useState('');
+  const [image, setImage] = useState('');
 
   const changeImage = e => {
     const file = e.target.files[0];
@@ -160,30 +180,33 @@ const ChangePhotoBox = ({ isOpen, onClose, changeImageSubmitHandler }) => {
     };
   };
 
-  const onCloseHandler=()=>{
+  const onCloseHandler = () => {
     onClose();
-    setImage('')
-    setImagePrev('')
-  }
+    setImage('');
+    setImagePrev('');
+  };
   return (
     <Modal isOpen={isOpen} onClose={onCloseHandler}>
       <ModalOverlay backdropFilter={'blur(10px)'} />
       <ModalContent>
-        <ModalHeader>
-            Change Photo
-        </ModalHeader>
+        <ModalHeader>Change Photo</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Container>
-            <form onSubmit={(e)=>changeImageSubmitHandler(e,image)}>
+            <form onSubmit={e => changeImageSubmitHandler(e, image)}>
               <VStack spacing={8}>
-                {imagePrev && <Avatar boxSize={32} src={imagePrev}/>}
+                {imagePrev && <Avatar boxSize={32} src={imagePrev} />}
                 <Input
                   type="file"
                   onChange={changeImage}
                   css={{ '&::file-selector-button': fileUploadCss }}
                 />
-                <Button colorScheme="yellow" w={'full'} type="submit">
+                <Button
+                  colorScheme="yellow"
+                  w={'full'}
+                  type="submit"
+                  isLoading={loading}
+                >
                   Change
                 </Button>
               </VStack>

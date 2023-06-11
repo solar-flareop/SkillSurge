@@ -23,7 +23,9 @@ ChartJS.register(
   ArcElement
 );
 
-export const LineChart = () => {
+export const LineChart = ({stats}) => {
+  const lineChartViews = stats.map((item)=>item.views)
+  const lineChartUsers = stats.map((item)=>item.users)
   const labels = getLastYearMonths();
   const options = {
     responsive: true,
@@ -33,7 +35,7 @@ export const LineChart = () => {
       },
       title: {
         display: true,
-        text: 'Yearly Views',
+        text: 'Yearly Views & Users',
       },
     },
   };
@@ -42,22 +44,28 @@ export const LineChart = () => {
     datasets: [
       {
         label: 'Views',
-        data: [1, 2, 3, 4],
+        data:lineChartViews ,
         borderColor: 'rgba(107,70,193,0.5)',
         backgroundColor: '#6b46c1',
+      },
+      {
+        label: 'Users',
+        data: lineChartUsers,
+        borderColor: 'rgba(255, 0, 0,0.5) ',
+        backgroundColor:'#fd7f6f',
       },
     ],
   };
   return <Line data={data} options={options} />;
 };
 
-export const DoughnutChart = () => {
+export const DoughnutChart = ({users= []}) => {
   const data = {
     labels: ['Subscribed', 'Not Subscribed'],
     datasets: [
       {
         label: 'Views',
-        data: [10, 20],
+        data:users,
         borderWidth: 1,
         borderColor: ['rgb(62,12,171)', 'rgb(214,43,129'],
         backgroundColor: ['rgba(62,12,171,0.3)', 'rgba(214,43,129,0.3'],

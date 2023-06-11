@@ -23,10 +23,11 @@ const CourseModal = ({
   onClose,
   isOpen,
   id,
+  loading,
   courseTitle,
   addLectureHandler,
   deleteButtonHandler,
-  lectures = [1,2,3,4,5,6,7,8,9],
+  lectures = [],
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -47,6 +48,8 @@ const CourseModal = ({
     onClose();
     setVideo('');
     setVideoPrev('');
+    setTitle('')
+    setDescription('')
   };
 
   return (
@@ -60,7 +63,7 @@ const CourseModal = ({
       <ModalContent>
         <ModalHeader>{courseTitle}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody p={[16,8]}>
+        <ModalBody p={[16, 8]}>
           <Grid templateColumns={['1fr', '3fr 1fr']}>
             <Box px={[0, 6]}>
               <Box my={5}>
@@ -68,22 +71,23 @@ const CourseModal = ({
                 <Heading children={`#${id}`} size={'sm'} opacity={0.4} />
               </Box>
               <Heading children="Lectures" size={'lg'} />
-              {lectures.map((item, idx) => (
+              {lectures.map((i, idx) => (
                 <VideoCard
-                key={idx}
-                  title="React into"
-                  num={idx+1}
-                  description="this is description of react course"
-                  lectureId="lec123"
+                  key={idx}
+                  title={i.title}
+                  num={idx + 1}
+                  description={i.description}
+                  lectureId={i._id}
                   courseId={id}
                   deleteButtonHandler={deleteButtonHandler}
+                  loading={loading}
                 />
               ))}
             </Box>
             <Box>
               <form
                 onSubmit={e =>
-                  addLectureHandler(e, id, title, video, description)
+                  addLectureHandler(e, id, title, description, video)
                 }
               >
                 <VStack spacing={8}>
@@ -96,13 +100,13 @@ const CourseModal = ({
                     focusBorderColor="purple.300"
                     placeholder="Title"
                     value={title}
-                    onChange={e => setTitle(e.target.valueAsDate)}
+                    onChange={e => setTitle(e.target.value)}
                   />
                   <Input
                     focusBorderColor="purple.300"
                     placeholder="Description"
                     value={description}
-                    onChange={e => setDescription(e.target.valueAsDate)}
+                    onChange={e => setDescription(e.target.value)}
                   />
                   <Input
                     required
@@ -124,7 +128,12 @@ const CourseModal = ({
                       src={videoPrev}
                     ></video>
                   )}
-                  <Button colorScheme="purple" type="submit" w={'full'}>
+                  <Button
+                    colorScheme="purple"
+                    type="submit"
+                    w={'full'}
+                    isLoading={loading}
+                  >
                     Upload
                   </Button>
                 </VStack>
@@ -149,6 +158,7 @@ const VideoCard = ({
   lectureId,
   courseId,
   deleteButtonHandler,
+  loading,
 }) => {
   return (
     <Stack
@@ -165,6 +175,7 @@ const VideoCard = ({
       </Box>
       <Button
         color={'purple.600'}
+        isLoading={loading}
         onClick={() => deleteButtonHandler(courseId, lectureId)}
       >
         <RiDeleteBin7Fill />

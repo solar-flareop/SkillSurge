@@ -10,7 +10,7 @@ const Loader = ({ color = 'yellow.500' }) => {
           speed="0.65s"
           emptyColor="transparent"
           color={color}
-          size={'xl'}
+          size={'lg'}
         />
       </div>
     </VStack>

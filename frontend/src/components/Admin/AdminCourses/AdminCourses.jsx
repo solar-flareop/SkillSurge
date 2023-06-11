@@ -15,42 +15,65 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import cursor from '../../../assets/images/cursor.png';
 import Sidebar from '../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import CourseModal from './CourseModal';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getAllCourses,
+  getCourseLectures,
+} from '../../../redux/actions/course';
+import { addLecture, deleteCourse, deleteLecture } from '../../../redux/actions/admin';
+import { toast } from 'react-hot-toast';
 
 const AdminCourses = () => {
-  const courses = [
-    {
-      _id: '456',
-      title: 'react',
-      category: 'web',
-      poster: {
-        url: 'https://images.unsplash.com/photo-1682270251135-b917816669e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=776&q=80',
-      },
-      createdBy: 'solarflare',
-      views: 100,
-      noOfVideos: 10,
-    },
-  ];
+  const dispatch = useDispatch();
+  const [courseId, setcourseId] = useState('');
+  const [courseTitle, setCourseTitle] = useState('');
+  const { courses, lectures } = useSelector(state => state.course);
+  const { loading, error, message } = useSelector(state => state.admin);
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const deteleButtonHandler = userId => {
-    console.log(userId);
+
+  const deteleButtonHandler = courseId => {
+    dispatch(deleteCourse(courseId));
   };
-  const courseDetailsHandler = userId => {
+
+  const courseDetailsHandler = (courseId, title) => {
+    dispatch(getCourseLectures(courseId));
     onOpen();
+    setcourseId(courseId);
+    setCourseTitle(title);
   };
 
-  const deleteModalLectureButtonHandler = (courseId, lectureId) => {
-    console.log(courseId, lectureId);
+  const deleteModalLectureButtonHandler = async (courseId, lectureId) => {
+    await dispatch(deleteLecture(courseId, lectureId));
+    dispatch(getCourseLectures(courseId));
   };
 
-  const addLectureHandler = (e, courseId, title, description, video) => {
+  const addLectureHandler = async (e, courseId, title, description, video) => {
     e.preventDefault();
+    const myForm = new FormData();
+    myForm.append('title', title);
+    myForm.append('description', description);
+    myForm.append('file', video); //in multer name is file
+    await dispatch(addLecture(courseId, myForm));
+    dispatch(getCourseLectures(courseId));
   };
-  
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+    dispatch(getAllCourses());
+  }, [dispatch, error, message]);
+
   return (
     <Grid
       minH={'90vh'}
@@ -86,6 +109,7 @@ const AdminCourses = () => {
                 <CustomRow
                   key={item._id}
                   item={item}
+                  loading={loading}
                   courseDetailsHandler={courseDetailsHandler}
                   deteleButtonHandler={deteleButtonHandler}
                 />
@@ -96,12 +120,14 @@ const AdminCourses = () => {
 
         {/* Modal */}
         <CourseModal
-          id={'randomid'}
-          courseTitle={'MERN'}
+          id={courseId}
+          courseTitle={courseTitle}
           isOpen={isOpen}
           onClose={onClose}
           deleteButtonHandler={deleteModalLectureButtonHandler}
           addLectureHandler={addLectureHandler}
+          lectures={lectures}
+          loading={loading}
         />
       </Box>
       <Sidebar />
@@ -109,7 +135,12 @@ const AdminCourses = () => {
   );
 };
 
-const CustomRow = ({ item, deteleButtonHandler, courseDetailsHandler }) => {
+const CustomRow = ({
+  loading,
+  item,
+  deteleButtonHandler,
+  courseDetailsHandler,
+}) => {
   return (
     <Tr>
       <Td>#{item._id}</Td>
@@ -120,19 +151,21 @@ const CustomRow = ({ item, deteleButtonHandler, courseDetailsHandler }) => {
       <Td textTransform={'uppercase'}>{item.category}</Td>
       <Td isNumeric>{item.createdBy}</Td>
       <Td isNumeric>{item.views}</Td>
-      <Td isNumeric>{item.noOfVideos}</Td>
+      <Td isNumeric>{item.numOfVideos}</Td>
 
       <Td isNumeric>
         <HStack justifyContent={'flex-end'}>
           <Button
             variant={'outline'}
             color={'purple.500'}
-            onClick={() => courseDetailsHandler(item._id)}
+            isLoading={loading}
+            onClick={() => courseDetailsHandler(item._id, item.title)}
           >
             View Lectures
           </Button>
           <Button
             color={'purple.600'}
+            isLoading={loading}
             onClick={() => deteleButtonHandler(item._id)}
           >
             <RiDeleteBin7Fill />

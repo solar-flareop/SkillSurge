@@ -139,12 +139,19 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/course/:id" element={<CoursePage />} />
+            <Route
+              path="/course/:id"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <CoursePage user={user} />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/subscribe"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Subscribe />
+                  <Subscribe user={user} />
                 </ProtectedRoute>
               }
             />

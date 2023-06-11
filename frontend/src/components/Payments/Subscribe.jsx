@@ -13,14 +13,16 @@ import { server } from '../../redux/store';
 import { buySubscription } from '../../redux/actions/user';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import logo from '../../assets/images/logo.png';
 
-const Subscribe = () => {
+const Subscribe = ({ user }) => {
   const dispatch = useDispatch();
   const [key, setKey] = useState('');
 
   const { loading, error, subscriptionId } = useSelector(
     state => state.subscription
   );
+  const { error: courseError } = useSelector(state => state.course);
 
   const subscribeHandler = async () => {
     const {
@@ -35,16 +37,46 @@ const Subscribe = () => {
       toast.error(error);
       dispatch({ type: 'clearError' });
     }
+    if (courseError) {
+      toast.error(courseError);
+      dispatch({ type: 'clearError' });
+    }
     if (subscriptionId) {
       const openPopUp = () => {
-        const options = { key };
+        const options = {
+          key,
+          name: 'SkillSurge',
+          description: 'Learn to innovate',
+          image: logo,
+          subscription_id: subscriptionId,
+          callback_url: `${server}/paymentverification`,
+          prefill: {
+            name: user.name,
+            email: user.email,
+            contact: '',
+          },
+          notes: {
+            address: 'Mumbai, India',
+          },
+          theme: {
+            color: '#FFC800',
+          },
+        };
 
         const razor = new window.Razorpay(options);
         razor.open();
       };
       openPopUp();
     }
-  }, []);
+  }, [
+    dispatch,
+    courseError,
+    error,
+    user.name,
+    user.email,
+    subscriptionId,
+    key,
+  ]);
 
   return (
     <Container h={'100vh'} p={8}>
@@ -68,6 +100,7 @@ const Subscribe = () => {
             w={'full'}
             my={4}
             onClick={subscribeHandler}
+            isLoading={loading}
           >
             {' '}
             Buy Now

@@ -27,7 +27,7 @@ import {
   removeFromPlaylist,
   updateProfilePicture,
 } from '../../redux/actions/profile';
-import { loadUser } from '../../redux/actions/user';
+import { cancelSubscription, loadUser } from '../../redux/actions/user';
 import { toast } from 'react-hot-toast';
 
 const Profile = ({ user }) => {
@@ -36,6 +36,11 @@ const Profile = ({ user }) => {
   const dispatch = useDispatch();
 
   const { loading, message, error } = useSelector(state => state.profile);
+  const {
+    loading: subscriptionLoading,
+    message: subscriptionMessage,
+    error: subscriptionError,
+  } = useSelector(state => state.subscription);
 
   useEffect(() => {
     if (error) {
@@ -46,11 +51,24 @@ const Profile = ({ user }) => {
       toast.success(message);
       dispatch({ type: 'clearMessage' });
     }
-  }, [error, message, dispatch]);
+    if (subscriptionError) {
+      toast.error(subscriptionError);
+      dispatch({ type: 'clearError' });
+    }
+    if (subscriptionMessage) {
+      toast.success(subscriptionMessage);
+      dispatch({ type: 'clearMessage' });
+      dispatch(loadUser());
+    }
+  }, [error, message, dispatch, subscriptionError, subscriptionMessage]);
 
   const removeFromPlaylistHandler = async id => {
     await dispatch(removeFromPlaylist(id));
     dispatch(loadUser());
+  };
+
+  const cancelSubscriptionHandler = () => {
+    dispatch(cancelSubscription());
   };
 
   const changeImageSubmitHandler = async (e, image) => {
@@ -98,7 +116,13 @@ const Profile = ({ user }) => {
             <HStack>
               <Text children="Subscription" fontWeight={'bold'} />
               {user.subscription && user.subscription.status === 'active' ? (
-                <Button color="yellow.500">Cancel Subscription</Button>
+                <Button
+                  color="yellow.500"
+                  onClick={cancelSubscriptionHandler}
+                  isLoading={subscriptionLoading}
+                >
+                  Cancel Subscription
+                </Button>
               ) : (
                 <Link to="/subscribe">
                   <Button colorScheme="yellow">Subscribe</Button>
